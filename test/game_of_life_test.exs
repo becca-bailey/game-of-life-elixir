@@ -10,4 +10,9 @@ defmodule GameOfLifeTest do
     assert GameOfLife.set_living_at({1, 1}) 
       |> GameOfLife.is_alive_at({1, 1}) == true
   end
+
+  test "after adding a cell the world is not empty" do
+    assert GameOfLife.set_living_at({1, 1})
+      |> GameOfLife.is_empty == false
+  end
 end
