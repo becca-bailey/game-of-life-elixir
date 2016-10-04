@@ -2,7 +2,7 @@ defmodule GameOfLifeTest do
   use ExUnit.Case
   doctest GameOfLife
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "a new game has an empty world" do
+    assert GameOfLife.is_empty(GameOfLife.world) == true 
   end
 end
