@@ -4,6 +4,28 @@ defmodule GameOfLife do
     [] 
   end
 
+  def size(world, n) when length(world) == n do
+    world
+  end
+
+  def world_size(world, size) do
+    add_rows(world, size, size)
+  end 
+
+  defp add_rows(world, size, counter) when counter == 0 do
+    world
+  end
+
+  defp add_rows(world, size, counter) do
+    List.insert_at(world, 0, build_row(size))
+    |> add_rows(size, counter - 1)
+  end
+
+  defp build_row(n) do
+    Enum.to_list(1..n)
+    |> Enum.map(fn x -> :dead end)
+  end
+
   def is_empty(world) when world == [] do
     true
   end
@@ -13,7 +35,7 @@ defmodule GameOfLife do
   end
 
   def set_living_at(world, {x, y}) do
-    [[:alive]]
+    List.update_at(world, index(x), &(List.replace_at(&1, index(y), :alive)))
   end
 
   def is_alive_at(world, {x, y}) do
@@ -26,6 +48,7 @@ defmodule GameOfLife do
 
   def tick(world) do
     kill_at(world, {1, 1}) 
+    |> kill_at({1, 2})
   end
 
   defp index(n) do
@@ -33,7 +56,7 @@ defmodule GameOfLife do
   end
 
   defp kill_at(world, {x, y}) do
-    [[:dead]]
+    List.update_at(world, index(x), &(List.replace_at(&1, index(y), :dead)))
   end
 
   defp is_alive(cell) do
