@@ -1,6 +1,9 @@
 defmodule GameOfLife do
-  @world []
   
+  def new do
+    [] 
+  end
+
   def is_empty(world) when world == [] do
     true
   end
@@ -9,19 +12,32 @@ defmodule GameOfLife do
     false
   end
 
-  def world do
-    @world
-  end
-
-  def set_living_at({x, y}) do
+  def set_living_at(world, {x, y}) do
     [[:alive]]
   end
 
   def is_alive_at(world, {x, y}) do
-    true
+    Enum.at(world, index(x)) |> Enum.at(index(y)) |> is_alive 
+  end
+
+  def tick(world) when world == [] do
+    world
   end
 
   def tick(world) do
-    world
+    kill_at(world, {1, 1}) 
   end
+
+  defp index(n) do
+    n - 1
+  end
+
+  defp kill_at(world, {x, y}) do
+    [[:dead]]
+  end
+
+  defp is_alive(cell) do
+    cell == :alive
+  end
+  
 end
