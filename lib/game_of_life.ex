@@ -20,4 +20,8 @@ defmodule GameOfLife do
   def is_alive_at(world, {x, y}) do
     true
   end
+
+  def tick(world) do
+    world
+  end
 end
