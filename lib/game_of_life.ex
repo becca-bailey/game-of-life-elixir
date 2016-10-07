@@ -38,8 +38,8 @@ defmodule GameOfLife do
     List.update_at(world, index(x), &(List.replace_at(&1, index(y), :alive)))
   end
 
-  def is_alive_at(world, {x, y}) do
-    Enum.at(world, index(x)) |> Enum.at(index(y)) |> is_alive 
+  def alive_at?(world, {x, y}) do
+    get_at_coordinate(world, x) |> get_at_coordinate(y) |> alive? 
   end
 
   def tick(world) when world == [] do
@@ -51,15 +51,50 @@ defmodule GameOfLife do
     |> kill_at({1, 2})
   end
 
+  def neighbors_count(world, {x, y}) do
+    coordinates_to_check = 
+      get_horizontal_coordinates(world, {x, y})
+    neighbors = Enum.map(coordinates_to_check, &(get_value_from_coordinate_pair(world, &1)))
+    Enum.count(neighbors, &(&1 == :alive))
+  end
+
+  defp get_horizontal_coordinates(world, {x, y}) do
+    cond do
+      length(world) == 1 ->
+        []
+      x == 1 ->  
+        [{2, y}]
+      x == length(world)
+        [{length(world) - 1, y}]
+      true ->
+        [{x - 1, y}, {x + 1, y}]
+    end
+  end
+
+  defp get_value_from_coordinate_pair(coll, {x, y}) do
+    coll 
+    |> get_at_coordinate(x)
+    |> get_at_coordinate(y)
+  end
+
+
+  defp get_at_coordinate(coll, coordinate) do
+    Enum.at(coll, index(coordinate))
+  end
+
   defp index(n) do
     n - 1
+  end
+
+  defp coordinate(n) do
+    n + 1
   end
 
   defp kill_at(world, {x, y}) do
     List.update_at(world, index(x), &(List.replace_at(&1, index(y), :dead)))
   end
 
-  defp is_alive(cell) do
+  defp alive?(cell) do
     cell == :alive
   end
   
